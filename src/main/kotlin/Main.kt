@@ -14,9 +14,44 @@ import java.nio.file.Path
 * Una función que reciba una lista de diccionarios como la que devuelve la función anterior y devuelva dos listas, una con los alumnos aprobados y otra con los alumnos suspensos. Para aprobar el curso, la asistencia tiene que ser mayor o igual que el 75%, la nota de los exámenes parciales y de prácticas mayor o igual que 4 y la nota final mayor o igual que 5.*/
 
 fun main() {
-    val path = Path.of("C:\\2ºDAM\\ADA\\Ejerccicio2-ADA\\src\\main\\resources\\calificaciones.csv")
-    val classif = clasificaciones(path)
+    val path = Path.of("src","main","resources","calificaciones.csv")
+    val classif = clasificaciones2(path)
     println(classif)
+}
+fun notaFinal(clasif: MutableList<MutableMap<String,String>>){
+    clasif.forEach {
+        var notaFinal = 0.0
+        it.forEach { (clave,nota) ->
+            if(clave == "Parcial1"){
+                notaFinal += (nota.toDouble() * 0.30)
+            } else if(clave == "Parcial2"){
+                notaFinal += (nota.toDouble() * 0.30)
+            } else if(clave == "Practicas"){
+                notaFinal += (nota.toDouble() * 0.40)
+            }
+        }
+    }
+}
+fun clasificaciones2(path: Path): MutableList<MutableMap<String,String>>{
+
+    var datos = mutableListOf<MutableMap<String,String>>()
+    val br = Files.newBufferedReader(path)
+
+    br.use {reader ->
+        val encabezado = reader.readLine().split(";")
+        reader.forEachLine { linea ->
+            val mapStudents = mutableMapOf<String,String>()
+
+            val valores = linea.split(";")
+            for (i in encabezado.indices){
+                mapStudents[encabezado[i]] = valores[i]
+            }
+            datos.add(mapStudents)
+
+            }
+        }
+
+    return datos.sortedBy { it["Apellidos"] }.toMutableList()
 }
 
 fun clasificaciones(path: Path): MutableList<MutableMap<String,MutableList<String>>>{
