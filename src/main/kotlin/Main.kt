@@ -87,7 +87,6 @@ fun notaFinal(clasif: MutableList<MutableMap<String, String>>): MutableList<Muta
         estudiante["Nota Final"] = String.format("%.2f", notaFinal)
 
     }
-    println(clasif)
 
     return clasif
 }
